@@ -8,7 +8,7 @@ const axios = require('axios')
 // The Godfather - tt0068646
 
 module.exports = {
-  getReviews: async (req, res) => {
+  getReviews: (req, res) => {
     let numReviews = 0
       , paginationKey = ''
       , baseUrl = `http://www.imdb.com/title/${req.params.id}/reviews/_ajax`
