@@ -16,4 +16,4 @@ app.use(cors());
 app.get(`/api/id/:title`, imdbController.titleToID);
 app.get(`/api/reviews/:id`, imdbController.getReviews);
 
-app.listen(process.env.PORT, () => console.log(`I'm listening... on port ${process.env.PORT}`));
+app.listen(process.env.BACKEND_PORT, () => console.log(`I'm listening... on port ${process.env.BACKEND_PORT}`));
