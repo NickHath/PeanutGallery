@@ -6,7 +6,8 @@ const express = require('express')
     , app = express();
 
 // controllers
-const imdbController = require('./controllers/imdbController');
+const imdbController = require('./controllers/imdbController')
+    , tmdbController = require('./controllers/tmdbController');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -15,5 +16,7 @@ app.use(cors());
 // should take an a movie title and return all of its reviews
 app.get(`/api/id/:title`, imdbController.titleToID);
 app.get(`/api/reviews/:id`, imdbController.getReviews);
+
+app.get(`/api/titles`, tmdbController.getTitles);
 
 app.listen(process.env.BACKEND_PORT, () => console.log(`I'm listening... on port ${process.env.BACKEND_PORT}`));
