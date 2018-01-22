@@ -26,27 +26,29 @@ let genres = {
     'western': 37
 };
 
-let genre = 'comedy';
+let genre = 'documentary';
 
 axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_genres=${genres[genre]}`)
      .then(res => {
-        totalPages = res.data.total_pages;
-        fs.appendFileSync('movieTitles.txt', `Genre: ${genre}\tTotal Results: ${res.data.total_results}\n`);
+        // totalPages = res.data.total_pages;
+        // TMDB limits requests to the first 1000 pages
+        totalPages = 1000;
+        fs.appendFileSync(`./movie_titles/${genre}_movie_titles.txt`, `Genre: ${genre}\tTotal Results: ${res.data.total_results}\n`);
         getMovieTitles(1);
 
         for (let i = 2; i <= totalPages; i++) {
-          setTimeout(() => getMovieTitles(i), i * 1000);
+          setTimeout(() => getMovieTitles(i), i * 350);
         }
      });
 
 function getMovieTitles(page) {
   let movieTitles = '';
-  console.log(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_genres=${genres['comedy']}&page=${page}`);
-  axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_genres=${genres['comedy']}&page=${page}`)
+  console.log(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_genres=${genres[genre]}&page=${page}`);
+  axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_genres=${genres[genre]}&page=${page}`)
        .then(res => {
         res.data.results.forEach(movie => {
           movieTitles += (movie.title + '\n');
         });  
-        fs.appendFileSync('movieTitles.txt', movieTitles);
+        fs.appendFileSync(`./movie_titles/${genre}_movie_titles.txt`, movieTitles);
       });
 }
