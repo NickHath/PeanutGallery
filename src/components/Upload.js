@@ -8,30 +8,39 @@ class Upload extends Component {
   constructor() {
     super();
     this.state = {
-      data: null
+      data: null,
+      imdbIDs: []
     }
   }
 
-  handleData (data) {
+  handleData = data => {
     this.setState({ data });
   }
 
-  getReviews(title) {
-    this.props.getImdbID
+  handleClick = title => {
+    // Consolidate https requests on the back-end
+    // Just send entire file of titles, then let the back-end handle
+    // all the calls... otherwise there's an insufficient resource error in the
+    // browser
+    for (let i = 0; i < 5000; i++) {
+      this.props.getImdbID(this.state.data[i].title);
+    }
   }
 
   render() {
     const fileHeaders = ['title'];
-    console.log(this.state);
+    const allImdbIDs = this.props.imdbIDs.forEach(id => <p>id</p>);
+    console.log(this.props.imdbIDs);
     return (
       <div className='search-wrapper'>
-        <CsvParse fileHeaders={fileHeaders}
-                  onDataUploaded={this.handleData}
-                  render={onChange => <input type='file' onChange={ onChange } />}
+        <CsvParse fileHeaders={ fileHeaders }
+                  onDataUploaded={ this.handleData }
+                  render={ onChange => <input type='file' onChange={ onChange } /> }
         />
         <input placeholder='Category/Label' />
         <input placeholder='Max. # Reviews' />
-        <button>Scrape Reviews</button>
+        <button onClick={ this.handleClick }>Scrape Reviews</button>
+         { allImdbIDs }
       </div>
     );
   }

@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const initialState = {
   imdbID: '',
+  imdbIDs: [],
   reviews: [],
 };
 
@@ -11,7 +12,7 @@ const GET_IMDB_ID = 'GET_IMDB_ID'
 export default function reducer(state=initialState, action) {
   switch(action.type) {
     case GET_IMDB_ID + '_FULFILLED':
-      return Object.assign({}, state, { imdbID: action.payload });
+      return Object.assign({}, state, { imdbID: action.payload, imdbIDs: [...state.imdbIDs, action.payload] });
     case GET_REVIEWS + '_FULFILLED':
       return Object.assign({}, state, { reviews: action.payload });
     default:
@@ -20,7 +21,6 @@ export default function reducer(state=initialState, action) {
 }
 
 export function getImdbID(title) {
-  console.log(title);
   const results = axios.get(`http://localhost:4200/api/id/${title}`)
                        .then(res => res.data);
   return {
