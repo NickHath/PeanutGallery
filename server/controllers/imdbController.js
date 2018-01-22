@@ -8,6 +8,16 @@ const axios = require('axios')
 // The Godfather - tt0068646
 
 module.exports = {
+  reviewsFromTitles: (req, res) => {
+    let imdbID = ''
+    , omdbApiKey = process.env.OMDB_API_KEY
+    , omdbBaseUrl = 'http://www.omdbapi.com/';
+    
+    let category = req.body.category;
+    let allTitles = req.body.titles.map(movie => movie.title);
+    console.log(allTitles);
+  },
+
   getReviews: (req, res) => {
     let numReviews = 0
       , paginationKey = ''

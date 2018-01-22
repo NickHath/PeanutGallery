@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { getImdbID } from '../ducks/reducer';
 
 import CsvParse from '@vtex/react-csv-parse';
+import axios from 'axios';
 
 class Upload extends Component {
   constructor() {
@@ -22,9 +23,11 @@ class Upload extends Component {
     // Just send entire file of titles, then let the back-end handle
     // all the calls... otherwise there's an insufficient resource error in the
     // browser
-    for (let i = 0; i < 5000; i++) {
-      this.props.getImdbID(this.state.data[i].title);
-    }
+    // for (let i = 0; i < 5000; i++) {
+    //   this.props.getImdbID(this.state.data[i].title);
+    // }
+    let titles = { category: 'test', titles: this.state.data };
+    axios.post('http://localhost:4200/api/titles', titles);
   }
 
   render() {
@@ -39,7 +42,7 @@ class Upload extends Component {
         />
         <input placeholder='Category/Label' />
         <input placeholder='Max. # Reviews' />
-        <button onClick={ this.handleClick }>Scrape Reviews</button>
+        <button onClick={ this.handleClick }>Send Movie Titles -> Server</button>
          { allImdbIDs }
       </div>
     );

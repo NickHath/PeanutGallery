@@ -9,11 +9,12 @@ const express = require('express')
 const imdbController = require('./controllers/imdbController')
     , tmdbController = require('./controllers/tmdbController');
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '5mb' }));
 app.use(cors());
 
 // api endpoint that react will use to get reviews
 // should take an a movie title and return all of its reviews
+app.post(`/api/titles`, imdbController.reviewsFromTitles);
 app.get(`/api/id/:title`, imdbController.titleToID);
 app.get(`/api/reviews/:id`, imdbController.getReviews);
 
