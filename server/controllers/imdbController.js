@@ -15,9 +15,10 @@ module.exports = {
 
     let { category, titles } = req.body;
     titles = titles.map(movie => movie.title.toLowerCase().replace(/\s/g, '%20'));
-    titles = titles.slice(0, 100);
+    titles = titles.slice(0, 500);
 
-    axios.all(titles.map(title => axios.get(`${omdbBaseUrl}?apikey=${omdbApiKey}&t=${title}`)))
+    let urls = titles.map(title => axios.get(`${omdbBaseUrl}?apikey=${omdbApiKey}&t=${title}`));
+    axios.all(urls)
          .then(results => {
             let imdbIDs = results.map(response => response.data.imdbID);
             console.log(imdbIDs);
