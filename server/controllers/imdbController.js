@@ -1,6 +1,7 @@
 require('dotenv').config();
 const axios = require('axios')
-    , cheerio = require('cheerio');
+    , cheerio = require('cheerio')
+    , fs = require('fs');
 
 // sample imdb titles
 // I, Tanya - tt5580036
@@ -9,13 +10,18 @@ const axios = require('axios')
 
 module.exports = {
   reviewsFromTitles: (req, res) => {
-    let imdbID = ''
-    , omdbApiKey = process.env.OMDB_API_KEY
-    , omdbBaseUrl = 'http://www.omdbapi.com/';
-    
-    let category = req.body.category;
-    let allTitles = req.body.titles.map(movie => movie.title);
-    console.log(allTitles);
+    const omdbApiKey = process.env.OMDB_API_KEY
+        , omdbBaseUrl = 'http://www.omdbapi.com/';
+
+    let { category, titles } = req.body;
+    titles = titles.map(movie => movie.title.toLowerCase().replace(/\s/g, '%20'));
+    titles = titles.slice(0, 100);
+
+    axios.all(titles.map(title => axios.get(`${omdbBaseUrl}?apikey=${omdbApiKey}&t=${title}`)))
+         .then(results => {
+            let imdbIDs = results.map(response => response.data.imdbID);
+            console.log(imdbIDs);
+          })
   },
 
   getReviews: (req, res) => {

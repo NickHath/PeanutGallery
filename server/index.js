@@ -18,6 +18,6 @@ app.post(`/api/titles`, imdbController.reviewsFromTitles);
 app.get(`/api/id/:title`, imdbController.titleToID);
 app.get(`/api/reviews/:id`, imdbController.getReviews);
 
-app.get(`/api/titles`, tmdbController.getTitles);
+// app.get(`/api/titles`, tmdbController.getTitles);
 
 app.listen(process.env.BACKEND_PORT, () => console.log(`I'm listening... on port ${process.env.BACKEND_PORT}`));
