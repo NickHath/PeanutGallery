@@ -14,15 +14,17 @@ module.exports = {
         , omdbBaseUrl = 'http://www.omdbapi.com/';
 
     let { category, titles } = req.body;
-    titles = titles.map(movie => movie.title.toLowerCase().replace(/\s/g, '%20'));
-    titles = titles.slice(0, 500);
 
+    // remove non-ASCII characters and replace ' ' with '%20'
+    titles = titles.map(movie => movie.title.toLowerCase().replace(/[^\x00-\x7F]/g, '').replace(/[-:']/g, '').replace(/\s/g, '%20'));
+    titles = titles.slice(0, 2000);
     let urls = titles.map(title => axios.get(`${omdbBaseUrl}?apikey=${omdbApiKey}&t=${title}`));
     axios.all(urls)
          .then(results => {
             let imdbIDs = results.map(response => response.data.imdbID);
             console.log(imdbIDs);
           })
+          .catch(err => console.log(err));
   },
 
   getReviews: (req, res) => {
