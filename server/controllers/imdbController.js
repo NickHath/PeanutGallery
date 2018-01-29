@@ -1,7 +1,10 @@
+// import { setTimeout } from 'timers';
+
 require('dotenv').config();
 const axios = require('axios')
     , cheerio = require('cheerio')
     , fs = require('fs');
+    // , http = require('http');
 
 // sample imdb titles
 // I, Tanya - tt5580036
@@ -17,10 +20,21 @@ module.exports = {
 
     // remove non-ASCII characters and replace ' ' with '%20'
     titles = titles.map(movie => movie.title.toLowerCase().replace(/[^\x00-\x7F]/g, '').replace(/[-:']/g, '').replace(/\s/g, '%20'));
-    titles = titles.slice(0, 2000);
-    let urls = titles.map(title => axios.get(`${omdbBaseUrl}?apikey=${omdbApiKey}&t=${title}`));
+    titles = titles.slice(0, 200);
+
+    let urls = titles.map(title => {
+      // var options = {
+      //   host: 'http://www.omdbapi.com',
+      //   port: 80,
+      //   path: '/?apikey=${omdbApiKey}&t=${title}',
+      //   method: 'GET',
+      //   agent: false
+      // };
+      return axios.get(`${omdbBaseUrl}?apikey=${omdbApiKey}&t=${title}`);
+    });
     axios.all(urls)
          .then(results => {
+            console.log(urls);
             let imdbIDs = results.map(response => response.data.imdbID);
             console.log(imdbIDs);
           })
