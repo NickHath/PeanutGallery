@@ -18,20 +18,16 @@ module.exports = {
 
     let { category, titles } = req.body;
 
+    // catch err, retry if ENOTFOUND or ECONNRESET?
+    // schedule the requests with a timeout!!! 200 at a time
+    // notes for OMDB say no more than 20 concurrent requests
+
+
     // remove non-ASCII characters and replace ' ' with '%20'
     titles = titles.map(movie => movie.title.toLowerCase().replace(/[^\x00-\x7F]/g, '').replace(/[-:']/g, '').replace(/\s/g, '%20'));
-    titles = titles.slice(0, 200);
+    titles = titles.slice(0, 500);
 
-    let urls = titles.map(title => {
-      // var options = {
-      //   host: 'http://www.omdbapi.com',
-      //   port: 80,
-      //   path: '/?apikey=${omdbApiKey}&t=${title}',
-      //   method: 'GET',
-      //   agent: false
-      // };
-      return axios.get(`${omdbBaseUrl}?apikey=${omdbApiKey}&t=${title}`);
-    });
+    let urls = titles.map(title => axios.get(`${omdbBaseUrl}?apikey=${omdbApiKey}&t=${title}`));
     axios.all(urls)
          .then(results => {
             console.log(urls);
