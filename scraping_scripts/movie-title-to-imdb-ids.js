@@ -2,13 +2,21 @@ require('dotenv').config();
 const fs = require('fs')
     , axios = require('axios');
 
+
+
 function sendRequest(title) {
   const omdbApiKey = process.env.OMDB_API_KEY
       , omdbBaseUrl = 'http://www.omdbapi.com/';
   // console.log(`${omdbBaseUrl}?apikey=${omdbApiKey}&t=${title}`)
   axios.get(`${omdbBaseUrl}?apikey=${omdbApiKey}&t=${title}`)
-        .then(response => console.log(response.data.imdbID))
-        .catch(err => console.log('error!'));
+        .then(response => {
+          if (response.data.imdbID) {
+            // console.log(response.data.imdbID)
+            let title = response.data.Title.replace(/,/g, '');
+            fs.appendFile('./intermediate-csv/animation_imdb_ids.txt', `${title}, ${response.data.imdbID},\n`, err => console.error(err));
+          }
+        })
+        .catch(err => console.error(err));
 }
 
 fs.readFile('./movie_titles/animation_movie_titles.txt', 'utf-8', (err, data) => {
